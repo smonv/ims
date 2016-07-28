@@ -3,15 +3,16 @@ package arango
 import "github.com/solher/arangolite"
 
 var (
-	imageStore ImageStore
-	tagStore   TagStore
+	imageStore    ImageStore
+	tagStore      TagStore
+	imageTagStore ImageTagStore
 )
 
 func init() {
 	dbName := "ims"
 	endpoint := "http://localhost:8529"
 
-	db := arangolite.New().Connect(endpoint, "_system", "", "")
+	db := arangolite.New().LoggerOptions(true, true, false).Connect(endpoint, "_system", "", "")
 
 	_, _ = db.Run(&arangolite.DropDatabase{Name: dbName})
 	_, err := db.Run(&arangolite.CreateDatabase{Name: dbName})
@@ -42,4 +43,5 @@ func init() {
 
 	imageStore = NewImageStore(db)
 	tagStore = NewTagStore(db)
+	imageTagStore = NewImageTagStore(db)
 }

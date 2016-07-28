@@ -7,6 +7,7 @@ import (
 )
 
 const (
+	graphName          = "ims"
 	imageCollection    = "image"
 	tagCollection      = "tag"
 	imageTagCollection = "image_tag"

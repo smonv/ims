@@ -1,7 +1,6 @@
 package arango
 
 import (
-	"reflect"
 	"testing"
 
 	"github.com/tthanh/ims/model"
@@ -27,7 +26,7 @@ func TestGetImageByName(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !reflect.DeepEqual(img, image) {
+	if img.Name != image.Name {
 		t.Fatal("Get Wrong Image")
 	}
 }

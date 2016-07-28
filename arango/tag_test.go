@@ -1,7 +1,6 @@
 package arango
 
 import (
-	"reflect"
 	"testing"
 
 	"github.com/tthanh/ims/model"
@@ -9,15 +8,15 @@ import (
 
 var (
 	t1 = &model.Tag{
-		ID:   "1",
 		Name: "tag1",
 		Path: "path1",
+		UUID: "1",
 	}
 
 	t2 = &model.Tag{
-		ID:   "2",
 		Name: "tag2",
 		Path: "path2",
+		UUID: "2",
 	}
 )
 
@@ -35,17 +34,17 @@ func TestGetTags(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(result) != 2 {
-		t.Fatalf("len: %d != %d", len(result), 2)
+	if len(result) == 0 {
+		t.Fatalf("len: %d = 0", len(result))
 	}
 }
 
-func TestGetTagByID(t *testing.T) {
-	tag, err := tagStore.GetTagByID(t1.ID)
+func TestGetTagByUUID(t *testing.T) {
+	tag, err := tagStore.GetTagByUUID(t1.UUID)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !reflect.DeepEqual(tag, t1) {
+	if tag.UUID != t1.UUID {
 		t.Fatalf("%v != %v\n", tag, t1)
 	}
 }

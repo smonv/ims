@@ -47,11 +47,11 @@ func (ts TagStore) GetTags() ([]*model.Tag, error) {
 	return result, nil
 }
 
-// GetTagByID return model.Tag with given id
-func (ts TagStore) GetTagByID(id string) (*model.Tag, error) {
+// GetTagByUUID return model.Tag with given id
+func (ts TagStore) GetTagByUUID(uuid string) (*model.Tag, error) {
 	tx := arangolite.NewTransaction([]string{tagCollection}, nil).
-		AddQuery("var1", `FOR t IN %v FILTER t.id==@key LIMIT 1 RETURN t`, tagCollection).
-		Return("var1").Bind("key", id)
+		AddQuery("var1", `FOR t IN %v FILTER t.uuid==@key LIMIT 1 RETURN t`, tagCollection).
+		Return("var1").Bind("key", uuid)
 
 	var result []*model.Tag
 	err := exec(ts.db, &result, tx)
