@@ -7,8 +7,9 @@ import (
 )
 
 const (
-	imageCollection = "image"
-	tagCollection   = "tag"
+	imageCollection    = "image"
+	tagCollection      = "tag"
+	imageTagCollection = "image_tag"
 )
 
 func toJSON(v interface{}) string {
@@ -25,8 +26,8 @@ func exec(db *arangolite.DB, r interface{}, q arangolite.Runnable) error {
 		return err
 	}
 
-	err := json.Unmarshal(d, r)
-	if err == nil {
+	err = json.Unmarshal(d, r)
+	if err != nil {
 		panic(err)
 	}
 	return nil
