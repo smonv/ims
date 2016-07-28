@@ -4,6 +4,7 @@ import "github.com/solher/arangolite"
 
 var (
 	imageStore ImageStore
+	tagStore   TagStore
 )
 
 func init() {
@@ -40,4 +41,5 @@ func init() {
 	db.Run(&arangolite.CreateGraph{Name: dbName, EdgeDefinitions: edgeDefinitions})
 
 	imageStore = NewImageStore(db)
+	tagStore = NewTagStore(db)
 }
