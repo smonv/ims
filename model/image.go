@@ -12,4 +12,7 @@ type Image struct {
 // ImageStore interface
 type ImageStore interface {
 	Create(image *Image) error
+
+	GetByKey(key string) (*Image, error)
+	GetByName(name string) (*Image, error)
 }

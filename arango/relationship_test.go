@@ -42,7 +42,7 @@ func init() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	rImage, err = imageStore.GetImageByName(imageName)
+	rImage, err = imageStore.GetByName(imageName)
 	if err != nil {
 		fmt.Println(err)
 	}

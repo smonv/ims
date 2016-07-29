@@ -21,8 +21,18 @@ func TestImageStore_Create(t *testing.T) {
 	}
 }
 
-func TestImageStore_GetImageByName(t *testing.T) {
-	img, err := imageStore.GetImageByName(image.Name)
+func TestImageStore_GetByKey(t *testing.T) {
+	img, err := imageStore.GetByKey(image.Key)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if img.Key != image.Key {
+		t.Fatalf("Wrong image key: %s != %s", img.Key, image.Key)
+	}
+}
+
+func TestImageStore_GetByName(t *testing.T) {
+	img, err := imageStore.GetByName(image.Name)
 	if err != nil {
 		t.Fatal(err)
 	}
