@@ -28,7 +28,7 @@ func init() {
 		UUID: tagUUID,
 	}
 
-	err := imageStore.CreateImage(i)
+	err := imageStore.Create(i)
 	if err != nil {
 		fmt.Println(err)
 	}

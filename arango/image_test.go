@@ -14,14 +14,14 @@ var (
 	}
 )
 
-func TestCreateImage(t *testing.T) {
-	err := imageStore.CreateImage(image)
+func TestImageStore_Create(t *testing.T) {
+	err := imageStore.Create(image)
 	if err != nil {
 		t.Fatal(err)
 	}
 }
 
-func TestGetImageByName(t *testing.T) {
+func TestImageStore_GetImageByName(t *testing.T) {
 	img, err := imageStore.GetImageByName(image.Name)
 	if err != nil {
 		t.Fatal(err)

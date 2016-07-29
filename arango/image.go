@@ -1,6 +1,7 @@
 package arango
 
 import (
+	uuid "github.com/satori/go.uuid"
 	"github.com/solher/arangolite"
 	"github.com/tthanh/ims/model"
 )
@@ -17,8 +18,10 @@ func NewImageStore(db *arangolite.DB) ImageStore {
 	}
 }
 
-// CreateImage create new image
-func (is ImageStore) CreateImage(image *model.Image) error {
+// Create create new image
+func (is ImageStore) Create(image *model.Image) error {
+	image.Key = uuid.NewV4().String()
+
 	tx := arangolite.NewTransaction([]string{imageCollection}, []string{imageCollection}).
 		AddQuery("newImage", `INSERT %v IN %v`, toJSON(image), imageCollection)
 

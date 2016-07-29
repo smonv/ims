@@ -2,6 +2,7 @@ package model
 
 // Image struct
 type Image struct {
+	Key  string `json:"_key"`
 	ID   string `json:"_id"`
 	Name string `json:"name"`
 	Size uint64 `json:"size"`
@@ -10,5 +11,5 @@ type Image struct {
 
 // ImageStore interface
 type ImageStore interface {
-	CreateImage(image *Image) error
+	Create(image *Image) error
 }
