@@ -10,27 +10,29 @@ var (
 	t1 = &model.Tag{
 		Name: "tag1",
 		Path: "path1",
-		UUID: "1",
 	}
 
 	t2 = &model.Tag{
 		Name: "tag2",
 		Path: "path2",
-		UUID: "2",
 	}
 )
 
-func TestCreateTag(t *testing.T) {
-	err := tagStore.CreateTag(t1)
+func TestTagStore_Create(t *testing.T) {
+	err := tagStore.Create(t1)
 	if err != nil {
 		t.Fatal(err)
 	}
+
+	if len(t1.ID) == 0 {
+		t.Fatal("New Tag.ID empty")
+	}
 }
 
-func TestGetTags(t *testing.T) {
-	_ = tagStore.CreateTag(t2)
+func TestTagStore_GetAll(t *testing.T) {
+	_ = tagStore.Create(t2)
 
-	result, err := tagStore.GetTags()
+	result, err := tagStore.GetAll()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -39,12 +41,12 @@ func TestGetTags(t *testing.T) {
 	}
 }
 
-func TestGetTagByUUID(t *testing.T) {
-	tag, err := tagStore.GetTagByUUID(t1.UUID)
+func TestTagStore_GetByKey(t *testing.T) {
+	tag, err := tagStore.GetByKey(t1.Key)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if tag.UUID != t1.UUID {
+	if tag.Key != t1.Key {
 		t.Fatalf("%v != %v\n", tag, t1)
 	}
 }

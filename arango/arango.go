@@ -21,13 +21,13 @@ func toJSON(v interface{}) string {
 	return string(r)
 }
 
-func exec(db *arangolite.DB, r interface{}, q arangolite.Runnable) error {
-	d, err := db.Run(q)
+func exec(db *arangolite.DB, result interface{}, query arangolite.Runnable) error {
+	data, err := db.Run(query)
 	if err != nil {
 		return err
 	}
 
-	err = json.Unmarshal(d, r)
+	err = json.Unmarshal(data, result)
 	if err != nil {
 		panic(err)
 	}

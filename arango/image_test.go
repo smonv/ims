@@ -19,6 +19,9 @@ func TestImageStore_Create(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	if len(image.ID) == 0 {
+		t.Fatal("Image.ID empty")
+	}
 }
 
 func TestImageStore_GetByKey(t *testing.T) {

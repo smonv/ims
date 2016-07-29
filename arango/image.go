@@ -23,12 +23,20 @@ func (is ImageStore) Create(image *model.Image) error {
 	image.Key = uuid.NewV4().String()
 
 	tx := arangolite.NewTransaction([]string{imageCollection}, []string{imageCollection}).
-		AddQuery("newImage", `INSERT %v IN %v`, toJSON(image), imageCollection)
+		AddQuery("newImage", `INSERT %v IN %v RETURN NEW._id`, toJSON(image), imageCollection).
+		Return("newImage")
 
-	_, err := is.db.Run(tx)
+	result := []string{}
+	err := exec(is.db, &result, tx)
 	if err != nil {
 		return err
 	}
+	if len(result) == 0 {
+		return model.ErrNotExist
+	}
+
+	image.ID = result[0]
+
 	return nil
 }
 
@@ -38,7 +46,7 @@ func (is ImageStore) GetByKey(key string) (*model.Image, error) {
 		AddQuery("result", `FOR i IN %v FILTER i._key==@key LIMIT 1 RETURN i`, imageCollection).
 		Return("result").Bind("key", key)
 
-	var result []*model.Image
+	result := []*model.Image{}
 	err := exec(is.db, &result, tx)
 	if err != nil {
 		return nil, err
@@ -53,10 +61,10 @@ func (is ImageStore) GetByKey(key string) (*model.Image, error) {
 // GetByName return model.Image with given name
 func (is ImageStore) GetByName(name string) (*model.Image, error) {
 	tx := arangolite.NewTransaction([]string{imageCollection}, nil).
-		AddQuery("var1", `FOR i IN %v FILTER i.name==@key LIMIT 1 RETURN i`, imageCollection).
-		Return("var1").Bind("key", name)
+		AddQuery("result", `FOR i IN %v FILTER i.name==@name LIMIT 1 RETURN i`, imageCollection).
+		Return("result").Bind("name", name)
 
-	var result []*model.Image
+	result := []*model.Image{}
 	err := exec(is.db, &result, tx)
 	if err != nil {
 		return nil, err

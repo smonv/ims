@@ -1,6 +1,7 @@
 package arango
 
 import (
+	uuid "github.com/satori/go.uuid"
 	"github.com/solher/arangolite"
 	"github.com/tthanh/ims/model"
 )
@@ -17,25 +18,33 @@ func NewTagStore(db *arangolite.DB) TagStore {
 	}
 }
 
-// CreateTag create new model.Tag
-func (ts TagStore) CreateTag(tag *model.Tag) error {
-	tx := arangolite.NewTransaction([]string{tagCollection}, []string{tagCollection}).
-		AddQuery("newTag", `INSERT %v IN %v`, toJSON(tag), tagCollection)
+// Create create new model.Tag
+func (ts TagStore) Create(tag *model.Tag) error {
+	tag.Key = uuid.NewV4().String()
 
-	_, err := ts.db.Run(tx)
+	tx := arangolite.NewTransaction([]string{tagCollection}, []string{tagCollection}).
+		AddQuery("newTag", `INSERT %v IN %v RETURN NEW._id`, toJSON(tag), tagCollection).Return("newTag")
+
+	result := []string{}
+	err := exec(ts.db, &result, tx)
 	if err != nil {
 		return err
 	}
+	if len(result) == 0 {
+		return model.ErrNotExist
+	}
+
+	tag.ID = result[0]
 
 	return nil
 }
 
-// GetTags get all model.Tag
-func (ts TagStore) GetTags() ([]*model.Tag, error) {
+// GetAll get all model.Tag
+func (ts TagStore) GetAll() ([]*model.Tag, error) {
 	tx := arangolite.NewTransaction([]string{tagCollection}, nil).
-		AddQuery("var1", `FOR t IN %v RETURN t`, tagCollection).Return("var1")
+		AddQuery("result", `FOR t IN %v RETURN t`, tagCollection).Return("result")
 
-	var result []*model.Tag
+	result := []*model.Tag{}
 	err := exec(ts.db, &result, tx)
 	if err != nil {
 		return nil, err
@@ -47,13 +56,13 @@ func (ts TagStore) GetTags() ([]*model.Tag, error) {
 	return result, nil
 }
 
-// GetTagByUUID return model.Tag with given id
-func (ts TagStore) GetTagByUUID(uuid string) (*model.Tag, error) {
+// GetByKey return model.Tag with given id
+func (ts TagStore) GetByKey(key string) (*model.Tag, error) {
 	tx := arangolite.NewTransaction([]string{tagCollection}, nil).
-		AddQuery("var1", `FOR t IN %v FILTER t.uuid==@key LIMIT 1 RETURN t`, tagCollection).
-		Return("var1").Bind("key", uuid)
+		AddQuery("result", `FOR t IN %v FILTER t._key==@key LIMIT 1 RETURN t`, tagCollection).
+		Return("result").Bind("key", key)
 
-	var result []*model.Tag
+	result := []*model.Tag{}
 	err := exec(ts.db, &result, tx)
 	if err != nil {
 		return nil, err

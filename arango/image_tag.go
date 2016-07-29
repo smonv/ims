@@ -33,10 +33,10 @@ func (its ImageTagStore) Create(it *model.ImageTag) error {
 // GetImages return Images with given tag
 func (its ImageTagStore) GetImages(tagID string) ([]*model.Image, error) {
 	tx := arangolite.NewTransaction([]string{imageTagCollection, imageCollection}, nil).
-		AddQuery("var1", `FOR i IN INBOUND @key GRAPH @graph RETURN i`).
-		Return("var1").Bind("key", tagID).Bind("graph", graphName)
+		AddQuery("result", `FOR i IN INBOUND @id GRAPH @graph RETURN i`).
+		Return("result").Bind("id", tagID).Bind("graph", graphName)
 
-	var result []*model.Image
+	result := []*model.Image{}
 	err := exec(its.db, &result, tx)
 	if err != nil {
 		return nil, err
@@ -50,10 +50,10 @@ func (its ImageTagStore) GetImages(tagID string) ([]*model.Image, error) {
 // GetTags return Tags with given Image
 func (its ImageTagStore) GetTags(imageID string) ([]*model.Tag, error) {
 	tx := arangolite.NewTransaction([]string{imageTagCollection, tagCollection}, nil).
-		AddQuery("var1", `FOR t IN OUTBOUND @key GRAPH @graph RETURN t`).
-		Return("var1").Bind("key", imageID).Bind("graph", graphName)
+		AddQuery("result", `FOR t IN OUTBOUND @id GRAPH @graph RETURN t`).
+		Return("result").Bind("id", imageID).Bind("graph", graphName)
 
-	var result []*model.Tag
+	result := []*model.Tag{}
 	err := exec(its.db, &result, tx)
 	if err != nil {
 		return nil, err

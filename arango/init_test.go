@@ -12,7 +12,7 @@ func init() {
 	dbName := "ims"
 	endpoint := "http://localhost:8529"
 
-	db := arangolite.New().LoggerOptions(true, true, false).Connect(endpoint, "_system", "", "")
+	db := arangolite.New().LoggerOptions(false, false, false).Connect(endpoint, "_system", "", "")
 
 	_, _ = db.Run(&arangolite.DropDatabase{Name: dbName})
 	_, err := db.Run(&arangolite.CreateDatabase{Name: dbName})

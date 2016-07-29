@@ -2,16 +2,16 @@ package model
 
 // Tag struct
 type Tag struct {
+	Key  string `json:"_key"`
 	ID   string `json:"_id"`
 	Name string `json:"name"`
 	Path string `json:"path"`
-	UUID string `json:"uuid"`
 }
 
 // TagStore interface
 type TagStore interface {
-	CreateTag(tag *Tag) error
+	Create(tag *Tag) error
 
-	GetTags() ([]*Tag, error)
-	GetTagByUUID(uuid string) (*Tag, error)
+	GetAll() ([]*Tag, error)
+	GetByKey(key string) (*Tag, error)
 }
