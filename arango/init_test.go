@@ -9,7 +9,7 @@ var (
 )
 
 func init() {
-	dbName := "ims"
+	dbName := "ims_test"
 	endpoint := "http://localhost:8529"
 
 	db := arangolite.New().LoggerOptions(false, false, false).Connect(endpoint, "_system", "", "")
