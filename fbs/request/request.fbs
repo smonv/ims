@@ -1,0 +1,7 @@
+namespace request;
+
+table Request {
+	id: string;
+}
+
+root_type Request;
