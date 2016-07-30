@@ -30,14 +30,14 @@ func main() {
 	imageTagStore := arango.NewImageTagStore(db)
 	s = server.NewServer(imageStore, tagStore, imageTagStore)
 
-	http.Handle("/ws", websocket.Handler(wsHandler))
+	http.Handle("/ws", websocket.Handler(handler))
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		panic(err)
 	}
 }
 
-func wsHandler(ws *websocket.Conn) {
+func handler(ws *websocket.Conn) {
 	var req message.Request
 	for {
 		websocket.JSON.Receive(ws, &req)
