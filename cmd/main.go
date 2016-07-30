@@ -7,6 +7,7 @@ import (
 
 	"github.com/solher/arangolite"
 	"github.com/tthanh/ims/arango"
+	"github.com/tthanh/ims/config"
 	"github.com/tthanh/ims/message"
 	"github.com/tthanh/ims/model"
 	"github.com/tthanh/ims/server"
@@ -17,13 +18,15 @@ import (
 var (
 	routes []func(req *message.Request) (*message.Response, error)
 	s      *server.Server
+	c      *config.Config
 )
 
 func main() {
+	c = config.LoadConfig()
 	db := arangolite.New().LoggerOptions(false, false, false).
-		Connect("http://localhost:8529", "_system", "", "")
+		Connect(fmt.Sprintf("http://%s:%s", c.Arango.Host, c.Arango.Port), "_system", "", "")
 
-	arango.InitDatabase(db)
+	arango.InitDatabase(db, c.Arango)
 
 	imageStore := arango.NewImageStore(db)
 	tagStore := arango.NewTagStore(db)
