@@ -1,0 +1,7 @@
+namespace response;
+
+table Response {
+	id: string;
+}
+
+root_type Response;
