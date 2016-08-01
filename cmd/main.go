@@ -1,18 +1,15 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"github.com/solher/arangolite"
 	"github.com/tthanh/ims/arango"
 	"github.com/tthanh/ims/config"
 	"github.com/tthanh/ims/message"
-	"github.com/tthanh/ims/model"
 	"github.com/tthanh/ims/server"
-
-	"golang.org/x/net/websocket"
 )
 
 var (
@@ -33,41 +30,10 @@ func main() {
 	imageTagStore := arango.NewImageTagStore(db)
 	s = server.NewServer(imageStore, tagStore, imageTagStore)
 
-	http.Handle("/ws", websocket.Handler(handler))
-	err := http.ListenAndServe(":8080", nil)
-	if err != nil {
-		panic(err)
-	}
-}
+	r := mux.NewRouter()
+	r.HandleFunc("/", s.Home).Methods("GET")
+	r.HandleFunc("/api/tags", s.CreateTag).Methods("POST")
+	r.HandleFunc("/api/tags", s.GetTags).Methods("GET")
 
-func handler(ws *websocket.Conn) {
-	var req message.Request
-	for {
-		websocket.JSON.Receive(ws, &req)
-
-		resp, err := handle(s, &req)
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		respMgs, err := json.Marshal(resp)
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		websocket.JSON.Send(ws, respMgs)
-	}
-}
-
-func handle(s *server.Server, req *message.Request) (*message.Response, error) {
-	switch req.ActionType {
-	case message.ActionTypeCreateTag:
-		tag := &model.Tag{}
-		err := json.Unmarshal(*req.ActionData, tag)
-		if err != nil {
-			return nil, err
-		}
-		return s.CreateTag(tag)
-	}
-	return nil, nil
+	http.ListenAndServe(":8080", r)
 }
