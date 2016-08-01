@@ -36,6 +36,9 @@ func main() {
 	r.HandleFunc("/api/tags", s.GetTags).Methods("GET")
 	r.HandleFunc("/api/tags/{key}", s.GetTag).Methods("GET")
 	r.HandleFunc("/api/images/{key}", s.GetImage).Methods("GET")
+	r.HandleFunc("/api/relationships", s.CreateRelationship).Methods("POST")
+	r.HandleFunc("/api/relationships/images/{key}", s.GetImagesByTag).Methods("GET")
+	r.HandleFunc("/api/relationships/tags/{key}", s.GetTagsByImage).Methods("GET")
 
 	http.ListenAndServe(":8080", r)
 }
