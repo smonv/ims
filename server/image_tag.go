@@ -9,8 +9,8 @@ import (
 	"github.com/tthanh/ims/model"
 )
 
-// CreateRelationship ...
-func (s *Server) CreateRelationship(w http.ResponseWriter, r *http.Request) {
+// CreateImageTag ...
+func (s *Server) CreateImageTag(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	it := &model.ImageTag{}
 	err := decoder.Decode(it)

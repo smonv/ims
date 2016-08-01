@@ -8,14 +8,12 @@ import (
 	"github.com/solher/arangolite"
 	"github.com/tthanh/ims/arango"
 	"github.com/tthanh/ims/config"
-	"github.com/tthanh/ims/message"
 	"github.com/tthanh/ims/server"
 )
 
 var (
-	routes []func(req *message.Request) (*message.Response, error)
-	s      *server.Server
-	c      *config.Config
+	s *server.Server
+	c *config.Config
 )
 
 func main() {
@@ -36,9 +34,9 @@ func main() {
 	r.HandleFunc("/api/tags", s.GetTags).Methods("GET")
 	r.HandleFunc("/api/tags/{key}", s.GetTag).Methods("GET")
 	r.HandleFunc("/api/images/{key}", s.GetImage).Methods("GET")
-	r.HandleFunc("/api/relationships", s.CreateRelationship).Methods("POST")
-	r.HandleFunc("/api/relationships/images/{key}", s.GetImagesByTag).Methods("GET")
-	r.HandleFunc("/api/relationships/tags/{key}", s.GetTagsByImage).Methods("GET")
+	r.HandleFunc("/api/image_tag", s.CreateImageTag).Methods("POST")
+	r.HandleFunc("/api/image_tag/images/{key}", s.GetImagesByTag).Methods("GET")
+	r.HandleFunc("/api/image_tag/tags/{key}", s.GetTagsByImage).Methods("GET")
 
 	http.ListenAndServe(":8080", r)
 }
