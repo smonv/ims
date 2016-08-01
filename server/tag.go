@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"github.com/tthanh/ims/model"
 )
 
@@ -13,22 +14,34 @@ func (s *Server) CreateTag(w http.ResponseWriter, r *http.Request) {
 	tag := &model.Tag{}
 	err := decoder.Decode(tag)
 	if err != nil {
-		panic(err)
+		s.response(w, err)
 	}
 
 	err = s.tagStore.Create(tag)
 	if err != nil {
-		panic(err)
+		s.response(w, err)
 	}
 
-	response(w, tag)
+	s.response(w, tag)
 }
 
 // GetTags ...
 func (s *Server) GetTags(w http.ResponseWriter, r *http.Request) {
 	tags, err := s.tagStore.GetAll()
 	if err != nil {
-		response(w, err)
+		s.response(w, err)
 	}
-	response(w, tags)
+	s.response(w, tags)
+}
+
+// GetTag ...
+func (s *Server) GetTag(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	key := vars["key"]
+
+	tag, err := s.tagStore.GetByKey(key)
+	if err != nil {
+		s.response(w, err)
+	}
+	s.response(w, tag)
 }

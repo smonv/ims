@@ -34,6 +34,7 @@ func main() {
 	r.HandleFunc("/", s.Home).Methods("GET")
 	r.HandleFunc("/api/tags", s.CreateTag).Methods("POST")
 	r.HandleFunc("/api/tags", s.GetTags).Methods("GET")
+	r.HandleFunc("/api/tags/{key}", s.GetTag).Methods("GET")
 
 	http.ListenAndServe(":8080", r)
 }

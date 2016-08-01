@@ -29,7 +29,7 @@ func (s *Server) Home(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "%s", "Hello")
 }
 
-func response(w http.ResponseWriter, v interface{}) {
+func (s *Server) response(w http.ResponseWriter, v interface{}) {
 	d, err := json.Marshal(v)
 	if err != nil {
 		panic(err)
