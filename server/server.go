@@ -2,7 +2,7 @@ package server
 
 import (
 	"encoding/json"
-	"fmt"
+	"html/template"
 	"net/http"
 
 	"github.com/tthanh/ims/model"
@@ -24,9 +24,13 @@ func NewServer(imageStore model.ImageStore, tagStore model.TagStore, imageTagSto
 	}
 }
 
-// Home ..
-func (s *Server) Home(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "%s", "Hello")
+// Index ...
+func (s *Server) Index(w http.ResponseWriter, r *http.Request) {
+	t, err := template.ParseFiles("www/index.html")
+	if err != nil {
+		s.response(w, err)
+	}
+	t.Execute(w, nil)
 }
 
 func (s *Server) response(w http.ResponseWriter, v interface{}) {

@@ -29,7 +29,7 @@ func main() {
 	s = server.NewServer(imageStore, tagStore, imageTagStore)
 
 	r := mux.NewRouter()
-	r.HandleFunc("/", s.Home).Methods("GET")
+	r.HandleFunc("/", s.Index).Methods("GET")
 	r.HandleFunc("/api/tags", s.CreateTag).Methods("POST")
 	r.HandleFunc("/api/tags", s.GetTags).Methods("GET")
 	r.HandleFunc("/api/tags/{key}", s.GetTag).Methods("GET")
@@ -37,6 +37,8 @@ func main() {
 	r.HandleFunc("/api/image_tag", s.CreateImageTag).Methods("POST")
 	r.HandleFunc("/api/image_tag/images/{key}", s.GetImagesByTag).Methods("GET")
 	r.HandleFunc("/api/image_tag/tags/{key}", s.GetTagsByImage).Methods("GET")
+
+	r.PathPrefix("/assets").Handler(http.StripPrefix("/assets", http.FileServer(http.Dir("www/assets/"))))
 
 	http.ListenAndServe(":8080", r)
 }
